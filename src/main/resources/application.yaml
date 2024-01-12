@@ -4,5 +4,13 @@ spring:
       enabled: true
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate.ddl-auto: create
+jakarta:
+  persistence:
+    jdbc:
+      url: ${DB_URL}
+

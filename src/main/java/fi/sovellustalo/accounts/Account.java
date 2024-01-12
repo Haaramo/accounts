@@ -1,6 +1,10 @@
 package fi.sovellustalo.accounts;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Currency;
 
-public record Account(int id, int ownerId, int balance, Currency currency) {
+@Entity
+public record Account(@Id int id, int ownerId, int balance, Currency currency) {
 }
