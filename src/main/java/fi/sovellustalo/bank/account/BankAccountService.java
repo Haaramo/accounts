@@ -27,17 +27,19 @@ public class BankAccountService {
 
     @Transactional
     public BankTransferResult transfer(BankTransfer bankTransfer) {
-        return bankAccountRepository.findById(bankTransfer.fromAccountId())
+        return bankAccountRepository.findById(bankTransfer.fromAccountId()) // TODO select for update needed
                 .flatMap(fromAccount -> bankAccountRepository.findById(bankTransfer.toAccountId())
-                        .map(toAccount -> {
-                            ensureSameCurrency(fromAccount, toAccount);
-                            fromAccount.withdraw(bankTransfer.amount());
-                            toAccount.deposit(bankTransfer.amount());
-                            bankAccountRepository.save(fromAccount);
-                            bankAccountRepository.save(toAccount);
-                            return new BankTransferResult(fromAccount, toAccount);
-                        }))
+                        .map(toAccount -> transfer(bankTransfer.amount(), fromAccount, toAccount)))
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+    }
+
+    private BankTransferResult transfer(int amount, BankAccount fromAccount, BankAccount toAccount) {
+        ensureSameCurrency(fromAccount, toAccount);
+        fromAccount.withdraw(amount);
+        toAccount.deposit(amount);
+        bankAccountRepository.save(fromAccount);
+        bankAccountRepository.save(toAccount);
+        return new BankTransferResult(fromAccount, toAccount);
     }
 
     private void ensureSameCurrency(BankAccount fromAccount, BankAccount toAccount) {
