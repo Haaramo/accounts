@@ -14,11 +14,11 @@ class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    Account save(Account account) {
-        return accountRepository.save(account);
+    void save(BankAccount account) {
+        accountRepository.save(account);
     }
 
-    Optional<Account> findById(int id) {
+    Optional<BankAccount> findById(int id) {
         return accountRepository.findById(id);
     }
 }
