@@ -1,4 +1,4 @@
-package fi.sovellustalo.accounts;
+package fi.sovellustalo.bank.account;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,11 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Currency;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-class BankAccountsTests {
+class BankAccountRestTests {
 
 	@LocalServerPort
 	private int port;
@@ -26,16 +24,14 @@ class BankAccountsTests {
 
 	@Container
 	@ServiceConnection
-	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-			"postgres:16.1-alpine"
-	);
+	private static final PostgreSQLContainer<?> P = new PostgreSQLContainer<>(TestUtil.POSTGRES_IMAGE);
 
 	@Test
-	void save() {
-		var account = new BankAccount(1, 2, 21670, Currency.getInstance("EUR"));
-		restTemplate.postForObject("http://localhost:" + port + "/accounts", account, BankAccount.class);
+	void create() {
+		var account = new BankAccount(1, 2, 21670, TestUtil.EUR);
+		restTemplate.postForObject(TestUtil.accountsRestUrl(port), account, BankAccount.class);
 
-		var response = restTemplate.getForObject("http://localhost:" + port + "/accounts/" + 1, BankAccount.class);
+		var response = restTemplate.getForObject(TestUtil.accountsRestUrl(port) + "/" + 1, BankAccount.class);
 		assertEquals(account, response);
 	}
 }
