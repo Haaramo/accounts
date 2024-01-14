@@ -37,8 +37,6 @@ public class BankAccountService {
         ensureSameCurrency(fromAccount, toAccount);
         fromAccount.withdraw(amount);
         toAccount.deposit(amount);
-        bankAccountRepository.save(fromAccount);
-        bankAccountRepository.save(toAccount);
         return new BankTransferResult(fromAccount, toAccount);
     }
 
