@@ -27,8 +27,8 @@ public class BankAccountService {
 
     @Transactional
     public BankTransferResult transfer(BankTransfer bankTransfer) {
-        return bankAccountRepository.findById(bankTransfer.fromAccountId()) // TODO select for update needed
-                .flatMap(fromAccount -> bankAccountRepository.findById(bankTransfer.toAccountId())
+        return bankAccountRepository.findForUpdate(bankTransfer.fromAccountId())
+                .flatMap(fromAccount -> bankAccountRepository.findForUpdate(bankTransfer.toAccountId())
                         .map(toAccount -> transfer(bankTransfer.amount(), fromAccount, toAccount)))
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
     }
