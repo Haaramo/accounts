@@ -4,6 +4,7 @@ import fi.sovellustalo.bank.account.transaction.BankTransaction;
 import jakarta.persistence.*;
 import org.hibernate.annotations.BatchSize;
 
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class BankAccount {
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
     @OrderBy("time DESC")
     @BatchSize(size = 50)
-    public List<BankTransaction> transactions;
+    public List<BankTransaction> transactions = new ArrayList<>();
 
     public BankAccount(int id, int ownerId, int balance, Currency currency) {
         this.id = id;

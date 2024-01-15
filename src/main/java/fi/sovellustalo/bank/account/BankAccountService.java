@@ -17,8 +17,10 @@ public class BankAccountService {
         this.bankAccountRepository = bankAccountRepository;
     }
 
-    void save(BankAccount account) {
-        bankAccountRepository.save(account);
+    void create(BankAccount newBankAccount) {
+        if (bankAccountRepository.existsById(newBankAccount.id))
+            throw new IllegalArgumentException("Account already exists: " + newBankAccount);
+        bankAccountRepository.save(newBankAccount);
     }
 
     Optional<BankAccount> findById(int id) {
