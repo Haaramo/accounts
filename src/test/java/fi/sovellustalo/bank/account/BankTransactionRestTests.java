@@ -1,5 +1,6 @@
 package fi.sovellustalo.bank.account;
 
+import fi.sovellustalo.bank.account.transaction.BankTransactionMessageConsumer;
 import fi.sovellustalo.bank.account.transaction.BankTransfer;
 import fi.sovellustalo.bank.account.transaction.BankTransferResult;
 import org.junit.jupiter.api.Test;
@@ -8,14 +9,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
+@EmbeddedKafka
 class BankTransactionRestTests {
 
     @LocalServerPort
@@ -23,6 +30,9 @@ class BankTransactionRestTests {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private BankTransactionMessageConsumer messageConsumer;
 
     @Container
     @ServiceConnection
@@ -57,5 +67,27 @@ class BankTransactionRestTests {
 
         assertEquals(-12, fromAccount.transactions.getFirst().amount);
         assertEquals(12, toAccount.transactions.getFirst().amount);
+
+        assertMessageReceived(result);
+    }
+
+    private void assertMessageReceived(BankTransferResult result) {
+        var messageReceived = IntStream.rangeClosed(1, 10)
+                .anyMatch(i -> {
+                    if (messageConsumer.hasReceived(result)) {
+                        return true;
+                    }
+                    sleep200Milliseconds();
+                    return false;
+                });
+        assertTrue(messageReceived);
+    }
+
+    private static void sleep200Milliseconds() {
+        try {
+            TimeUnit.MILLISECONDS.sleep(200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

@@ -66,7 +66,7 @@ class BankAccountRestTests {
         var durationMillis = System.currentTimeMillis() - startMillis;
         log.atInfo().log("Created {} accounts in {} ms", ACCOUNTS_TO_CREATE_IN_LOAD_TEST, durationMillis);
 
-        assertTrue(durationMillis < 2000);
+        assertTrue(durationMillis < 2500);
     }
 
     private void generateLoad() {

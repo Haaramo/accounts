@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/transactions")
 class BankTransactionRestController {
     private final BankAccountService bankAccountService;
+    private final BankTransactionMessageProducer bankTransactionMessageProducer;
 
     @Autowired
-    BankTransactionRestController(BankAccountService bankAccountService) {
+    BankTransactionRestController(BankAccountService bankAccountService, BankTransactionMessageProducer bankTransactionMessageProducer) {
         this.bankAccountService = bankAccountService;
+        this.bankTransactionMessageProducer = bankTransactionMessageProducer;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     BankTransferResult transfer(@RequestBody BankTransfer bankTransfer) {
-        var result = bankAccountService.transfer(bankTransfer);
-        return result.truncateTransactions(50);
+        var result = bankAccountService.transfer(bankTransfer)
+                .truncateTransactions(50);
+        bankTransactionMessageProducer.send(result.truncateTransactions(1));
+        return result;
     }
 }

@@ -1,13 +1,11 @@
-package fi.sovellustalo.bank.account;
+package fi.sovellustalo.bank;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-class BankAccountApplication {
-
+class BankApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(BankAccountApplication.class, args);
+		SpringApplication.run(BankApplication.class, args);
 	}
-
 }

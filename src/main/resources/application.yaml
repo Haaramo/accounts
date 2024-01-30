@@ -5,3 +5,10 @@ spring:
   sql:
     init:
       mode: always
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: bank
+account:
+  transactions:
+    topic: account-transactions
