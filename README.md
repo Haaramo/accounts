@@ -1,11 +1,12 @@
 # Bank demo
 
 This is a demo of a bank application. It is a simple demo that allows you to create accounts and transfer money between them.
-It demonstrates the use of the following technologies:
+It demonstrates the use of:
 
 * Spring Boot 3
 * Java 21
 * Virtual threads
+* REST APIs
 * Spring Data with JPA
 * PostgreSQL
 * Kafka
