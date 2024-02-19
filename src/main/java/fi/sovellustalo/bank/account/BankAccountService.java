@@ -2,7 +2,6 @@ package fi.sovellustalo.bank.account;
 
 import fi.sovellustalo.bank.account.transaction.BankTransfer;
 import fi.sovellustalo.bank.account.transaction.BankTransferResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +11,6 @@ import java.util.Optional;
 public class BankAccountService {
     private final BankAccountRepository bankAccountRepository;
 
-    @Autowired
     BankAccountService(BankAccountRepository bankAccountRepository) {
         this.bankAccountRepository = bankAccountRepository;
     }

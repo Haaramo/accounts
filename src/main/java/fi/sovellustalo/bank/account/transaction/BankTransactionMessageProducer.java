@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 
 @Component
 class BankTransactionMessageProducer {
@@ -20,7 +19,6 @@ class BankTransactionMessageProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    @Autowired
     public BankTransactionMessageProducer(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
